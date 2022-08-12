@@ -26,6 +26,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+
 //        final String URL = "jdbc:mysql://localhost:3306/test1";
 //        final String USER = "root";
 //        final String PASSWORD = "Root123456^";
