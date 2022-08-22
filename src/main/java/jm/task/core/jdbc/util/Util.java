@@ -18,18 +18,8 @@ public class Util {
     private static final String PASSWORD = "Root123456^";
     private static SessionFactory sessionFactory;
 
-    private static Connection connection;
-
-    static {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Connection getConnection() {
-        return connection;
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
     public static SessionFactory getSessionFactory() {
@@ -37,7 +27,6 @@ public class Util {
             try {
                 Configuration configuration = new Configuration();
 
-                // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
                 settings.put(Environment.URL, URL);
@@ -61,5 +50,4 @@ public class Util {
         }
         return sessionFactory;
     }
-
 }

@@ -5,35 +5,14 @@ import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
-
-import javax.management.Query;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class UserDaoHibernateImpl implements UserDao {
+    private static Logger logh = Logger.getLogger(UserDaoHibernateImpl.class.getName());
+
     public UserDaoHibernateImpl() {
     }
-
-// test
-    public void saveStudent(User student) {
-        Transaction transaction = null;
-        try (Session session = Util.getSessionFactory().openSession()) {
-            // start a transaction
-            transaction = session.beginTransaction();
-            // save the student object
-            session.save(student);
-            // commit transaction
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public void createUsersTable() {
@@ -50,10 +29,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
+            logh.severe("Произошла ошибка при создании таблицы");
         }
     }
 
@@ -67,10 +43,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
+            logh.severe("Произошла ошибка при удалении таблицы");
         }
     }
 
@@ -86,7 +59,7 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logh.severe("Произошла ошибка при добавлении пользователя");
         }
     }
 
@@ -102,7 +75,7 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logh.severe("Произошла ошибка при удалении пользователя");
         }
     }
 
@@ -110,30 +83,11 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         try (Session session = Util.getSessionFactory().openSession()) {
             return session.createQuery("FROM User").list();
+        } catch (Exception e) {
+            logh.severe("Произошла ошибка при запросе всех пользователей");
         }
+        return null;
     }
-
-//    @Override
-//    public List<User> getAllUsers() {
-//        List<User> userList = new ArrayList<>();
-////        String sql = "select name, lastName, age from zh22";
-//        String sql = "select * from zh22";
-//
-//        Transaction transaction = null;
-//        try (Session session = Util.getSessionFactory().openSession()) {
-////            transaction = session.beginTransaction();
-//            NativeQuery query = session.createNativeQuery(sql).addEntity(User.class);
-//            userList = query.list();
-////            transaction.commit();
-//        } catch (Exception e) {
-////            if (transaction != null) {
-////                transaction.rollback();
-////            }
-//            e.printStackTrace();
-//        }
-//        return userList;
-//    }
-
 
     @Override
     public void cleanUsersTable() {
@@ -146,7 +100,7 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logh.severe("Произошла ошибка при очистке таблицы");
         }
     }
 }
