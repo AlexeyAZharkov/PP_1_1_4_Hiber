@@ -17,7 +17,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         Transaction transaction = null;
-        String sql = "CREATE TABLE `test1`.`zh22` (\n" +
+        String sql = "CREATE TABLE IF NOT EXISTS `test1`.`zh22` (\n" +
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                 "  `name` VARCHAR(45) NOT NULL,\n" +
                 "  `lastName` VARCHAR(45) NOT NULL,\n" +
@@ -29,6 +29,9 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             logh.severe("Произошла ошибка при создании таблицы");
         }
     }
@@ -36,13 +39,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         Transaction transaction = null;
-        String sql = "DROP TABLE `test1`.`zh22`;";
+        String sql = "DROP TABLE IF EXISTS `test1`.`zh22`;";
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             NativeQuery query = session.createNativeQuery(sql).addEntity(User.class);
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             logh.severe("Произошла ошибка при удалении таблицы");
         }
     }
